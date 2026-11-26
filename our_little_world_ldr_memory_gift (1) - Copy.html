@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Place For Our Little Memories</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Playfair Display (Serif Elegan) & Plus Jakarta Sans (Clean Modern Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Konfigurasi Warna & Tipografi Kustom Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: "#FAF7F2",
+            warmwhite: "#FFFFFF",
+            sand: "#F1EAE0",
+            softbrown: "#8C6D5E",
+            deepbrown: "#4A3B32",
+            dustypink: "#D8A7A7",
+            dustypinklight: "#F5EBEB",
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', "Georgia", "serif"],
+            sans: ['"Plus Jakarta Sans"', "system-ui", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* Pengaturan Dasar & Animasi Halus */
+    body {
+      background-color: #FAF7F2;
+      color: #4A3B32;
+      font-family: "Plus Jakarta Sans", sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Tekstur kertas sangat halus untuk kesan scrapbook modern */
+    .paper-texture {
+      background-image: radial-gradient(rgba(140, 109, 94, 0.08) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Animasi Fade Up Elegan */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-up {
+      animation: fadeInUp 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .delay-100 { animation-delay: 0.12s; }
+    .delay-200 { animation-delay: 0.25s; }
+    .delay-300 { animation-delay: 0.4s; }
+
+    /* Partikel Bintang / Hati Halus di Background */
+    @keyframes floatSlow {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.35;
+      }
+      50% {
+        transform: translateY(-16px) rotate(6deg);
+        opacity: 0.75;
+      }
+    }
+
+    .floating-ornament {
+      animation: floatSlow 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Gaya Kartu Scrapbook / Polaroid Modern */
+    .scrapbook-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(140, 109, 94, 0.14);
+      box-shadow: 0 10px 30px -10px rgba(74, 59, 50, 0.08);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .scrapbook-card:hover {
+      transform: translateY(-6px) rotate(0deg) !important;
+      box-shadow: 0 20px 40px -12px rgba(74, 59, 50, 0.16);
+    }
+
+    /* Selotip Washi Tape Minimalis di Atas Foto */
+    .washi-tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 74px;
+      height: 22px;
+      background-color: rgba(216, 167, 167, 0.42);
+      backdrop-filter: blur(2px);
+      border-left: 1px dashed rgba(255, 255, 255, 0.5);
+      border-right: 1px dashed rgba(255, 255, 255, 0.5);
+      z-index: 10;
+    }
+
+    /* Transisi Pesan Random */
+    .note-transition {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Reveal on Scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom Scrollbar Lembut */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF7F2;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5C7BC;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8C6D5E;
+    }
+  </style>
+</head>
+<body class="paper-texture selection:bg-dustypink/30 selection:text-deepbrown">
+
+  <!-- =====================================================================
+       PUSAT PENGATURAN WEBSITE (SITE_CONFIG)
+       Silakan ubah nama, tanggal, lokasi LDR, daftar foto, timeline cerita,
+       dan pesan-pesan di bagian bawah ini tanpa perlu mengubah kode HTML.
+       Catatan Foto: Simpan foto Anda di folder yang sama dengan file HTML ini
+       (atau ubah path menjadi 'images/namafile.jpg' jika ditaruh di folder images).
+  ====================================================================== -->
+  <script>
+    const SITE_CONFIG = {
+      // 1. Identitas Pasangan
+      coupleNames: "", // Contoh: "Raka & Nadia" atau biarkan "Kita Berdua" (bisa juga diedit langsung di web!)
+      heroHeadline: "Chapters of Us",
+      heroSubtitle:
+        "Web sederhana yang aku bikin berminggu minggu kalo ada waktu luang karena aku udh jago ngoding soalnya matkul aku 3 minggu yg lalu ttg inii, gtau tiba tiba kepikiran aja bikin web buat foto kita krna klo lagi ga mood aku bisa liat web inii biar selalu inget km walaupun tanpa web ini selalu inget sii,aku ga berharap km suka atau ngga krna ini aku bikin cuma sederhana bgttt.",
+      startDateLabel: "Sejak masa seragam praktik hingga hari ini",
+
+      // 2. Pengaturan Lokasi LDR & Hitung Mundur Pertemuan
+      yourCity: "Kota Kamu",
+      partnerCity: "Kota Aku (PDG & KRW)",
+      distanceNote: "udah beda kota, beda kesibukan, tapi tujuannya tetap sama kok.",
+      // Format tanggal: "YYYY-MM-DDTHH:MM:SS" (Bisa juga diubah langsung lewat tombol di halaman!)
+      nextMeetDate: "2026-12-01T10:00:00",
+      nextMeetLabel: "Pertemuan Berikutnya, SETTINGAN AJA INI BIASANYA KALO DISETTING CEPAT BAKALAN LEBIH CEPAT KTMU , DOAIN AJA BIAR BISA CEPAT KETEMU YAA",
+
+      // 3. Galeri Kenangan (Disesuaikan dengan 10 foto asli yang kamu lampirkan)
+      // Kategori tersedia: "jalan-jalan", "sekolah", "photobox", "candid"
+      memories: [
+        {
+          id: "mem-1",
+          src: "foto4.jpg.jpeg",
+          title: "Collecting moments, one place at a time",
+          date: "Arsip Jalan",
+          category: "jalan-jalan",
+          rotation: "-1.5deg",
+          caption:
+            "dua orang yg hobinya pergi terus, jujur kgn bgt main jauh sm kmu, si paling gamau kalo diajak gantian bawa motor, padahal jauhh tapi tetep kekeuh km yg bawa, ntah itu gamau aku cape bawa  motor atau ga,takut kalo aku yg bawa motor AHAHAHAHAHA walaupun tiap di jalan aku tidur teruss mknya takut itu kalo aku mau bawa mobil wajar km takut bub soalnya GABISAA, one day bisa kok "
+        },
+        {
+          id: "mem-2",
+          src: "WhatsApp Image 2026-11-09 at 5.12.30 PM (1).jpeg",
+          title: "After school",
+          date: "Momen Favorit",
+          category: "sekolah",
+          rotation: "1.8deg",
+          caption:
+            "Ternyata pulang sekolah bareng seseru itu ya? mauu 12 toi lagii biar ketemu tiap hari, walaupun dikelas ngeselin tapi gapapa bgtt daripada jauh ldr kaya sekarang:(( u not miss me gelitik gelitik leher and dada mu? smpe pernah bener bener marah krna cape digituin aku wkwkwkwwk)."
+        },
+        {
+          id: "mem-3",
+          src: "foto3.jpg.jpeg",
+          title: "PHOTOBOOTH",
+          date: "Edisi Lengkap",
+          category: "photobox",
+          rotation: "-1deg",
+          caption:
+            "Dari Suabox, Photohaus, Fishbox, sampai frame lift dan Valentine. KAPANN YA NEXT POTOBUT BUBB? kmu ga kangen apa photoboth wktu mauu mainn? km ga kgn meluk aku kis aku wktu foto? mana pose nya dadakan bbgtt lgi"
+        },
+        {
+          id: "mem-4",
+          src: "foto5.jpg.jpeg",
+          title: "Cafe Dates ",
+          date: "Random Hangout",
+          category: "maenn",
+          rotation: "1.5deg",
+          caption:
+            "agenda tiap malmingg, dia yg jmput, dia yg nungguin, dia yg bayar, dia yg nganterin plg lgi, aku? jdi prnces aja udahh, di waktu ini yg paling aku suka, karena kita bisa deeptalk apapun, bahas yg wktu diskola pokoknya bebas aja dah cerita kalo sama dia, gamau tau kalo kita ketemu harus main seharian ngobrolin apa aja udahh.gatau pokoknya next ktmu km harus bawa aku ke tempat tempat yang baru di padang WAJIBB"
+        },
+        {
+          id: "mem-5",
+          src: "foto2.jpg.jpeg",
+          title: "XII.2 TOI KALA ITU",
+          date: "Throwback Sekolah",
+          category: "sekolah",
+          rotation: "-1.8deg",
+          caption:
+            "ohh gini rasanya pacaran satu kelas? satu smti noh tau ajik cwonya siapa, gimana gatau org berdua mulu, tau ga hal yg paling kesel? silent treatment kalo ad mslsh dikls, smpe pernah wktu itu aku nangis huhu pdhl masalahnya ngobrol berdua aja kan ya, emg yah klo ga kaya gitu gaada kenangannya,yg tiap pulang skola selalu bareng KALO AKU GA BAWA MOTOR, tapi kalopun aku bawa motor suka minta temenin isi bensin huhu  trus ni bocah suka bgt foto aib aku klo lgi tidur dikelas, emg aneh y tapi gatau skrg masi ada apa engga fotonya, soalnya skrg hub kita kebanyakan berantem muyuu, klo aku mah always ada ga pelu ditanya cuma gabisa nambahin foto lgi huhu aib dia juga ada sama aku tau, vscode nya gabisaa tuh error nambahin foto, ngedukung bgt ya codingannya biar gada aib dia."
+        },
+        {
+          id: "mem-6",
+          src: "WhatsApp Image 2026-11-09 at 5.05.27 PM (1).jpeg",
+          title: "h-3",
+          date: "pamer rambut ini",
+          category: "candid",
+          rotation: "1.2deg",
+          caption:
+            "udah berpa lama bub aku ga mainin rambut kmu? udh berapa lama aku ga mainin wajah kmu? penasaran deh skrg yg apain siapa, curiga ucinknya,ini wktu aku cek mata apa ya? lupa akuu, yg penting aku ngurus apa gitu trus abis ini ktmu sm kmuu, pdhl masi pagii loh ini, wajar menyemptkan wktu berdua karna dia mau ditinggal aku ke karawang,tapi abis main pagi sorenya tetep main lagi huhu dia ga bosen apa ya ktmu wajah aku mulu?"
+        },
+        {
+          id: "mem-7",
+          src: "foto1.jpg.jpeg",
+          title: "AWAL DEKET LAGI",
+          date: "selfie random",
+          category: "candid",
+          rotation: "-1.2deg",
+          caption:
+            "tuh dari awal aja selfie nya emg ga pernah bner guys, yah kita sempet dkt wktu awal magang kls 12 tapi asing krna something, ga perlu dibahas kali ya udh lama juga, n gatau kenapa kita balik lagi dgn yg bnr bnr serius, kita dkt lgi krna sering info main gajelas itu sama faiga riskan pale acik repan dll, tapi krna keseringan main kita jdi pcaran ya bubb? jujur awalnya aku ga pernah sekalipun mikir bakalan mau lagi sama kmu, but karna aku wnt try 4u n smpe skrg masi berlanjut kkan? les lia toefl ingetin aku gimana kita deket dulu, tiap plg wajib nomgki duluu, di kala, folks, kopkitt,dll gatau lupaa"
+        },
+        {
+          id: "mem-8",
+          src: "WhatsApp Image 2026-11-09 at 5.12.30 PM.jpeg",
+          title: "Duo dg filter kesayangan itu",
+          date: "sela istirahat",
+          category: "sekolah",
+          rotation: "1.6deg",
+          caption:
+            "ini waktu foto angkatan guys, bulan puasaa, disini lgi breakk jadi kita smpatn bikin ttk foto foto sm filter kesayangan kita inii, gasalah ini bulan puasa tapi dia mokel itu mana ga ngajak buat mamm pdhl ak juga mau ikutt, disini juga di fotoin kya huhu n salahnya kita ga sempet fotbarr ihh kzlll, fotbar sm selfie beda ya"
+        },
+        {
+          id: "mem-9",
+          src: "WhatsApp Image 2026-11-09 at 5.05.27 PM.jpeg",
+          title: "my bubbub",
+          date: "asap",
+          category: "fav",
+          rotation: "-1.4deg",
+          caption:
+            "Pake hoodie hitam dengan asap asap di mulutnya itu, ini orang yang katanya mau stop ngepod dan ngudud itu? halah boongan, tobatnya kadang kadang pdhl udh sering aku ingetinn tau,jauhii dan pelan pelan bakalan bisa, eh smpe skrg masii aja, heran gua,sini ganti pake kis aja ngeyel bgt ni bocah diblgin, udh tau asap asap bgituan ga sehat buat badannya,masii aja, se cerewet apapun aku gabakal didngrin ituu klo soal bginian, pamer bgt tuh wajah ada asap"
+        },
+        {
+          id: "mem-10",
+          src: "WhatsApp Image 2026-11-09 at 1.50.19 PM.jpeg",
+          title: "Throwback: Lomba Mewarnai TK 2013",
+          date: "21 September 2013 • Padang",
+          category: "candid",
+          rotation: "1.4deg",
+          caption:
+            "jauh sblm kenal drama ldr, ni anak masi sibuk fokus mewarnai guys dgn set pink nya ituu, lucu pipinya pgn mam, skrg ga lucu guys soalnya udh umur 18, becandaa bubb peace"
+        }
+      ],
+
+      // 4. Timeline Perjalanan Hubungan ("Our Little Story")
+      storyTimeline: [
+        {
+          phase: "Bab 01",
+          date: "Awal Kenalan & Satu Sekolah",
+          title: "Berawal dari Seragam Praktik Biru",
+          description:
+            "Dimulai dari ruang kelas, dan catatan pelajaran. Dari yang awalnya cuma saling lihat di sela kegiatan sekolah, pelan-pelan jadi paling sering dicari."
+        },
+        {
+          phase: "Bab 02",
+          date: "Mulai Dekat & Jalan Pertama",
+          title: "Boncengan Sore & Kafe Pertama",
+          description:
+            "Pulang sekolah selalu bareng, main dan duduk cuma buat ngobrol hal-hal random, dan mulai sadar kalau waktu terasa cepat banget setiap lagi bareng."
+        },
+        {
+          phase: "Bab 03",
+          date: "Banyak Tawa & Photobox",
+          title: "Mengumpulkan Jejak di Kertas Photostrip",
+          description:
+            "Jalan ke pinggir danau berkabut, air terjun, sampai berburu berbagai booth foto—Suabox, Photohaus, Fishbox. Nggak pernah kehabisan gaya konyol di depan kamera."
+        },
+        {
+          phase: "Bab 04",
+          date: "Sekarang • Long Distance",
+          title: "Berjarak Sementara, Searah Selamanya",
+          description:
+            "Sekarang rutinitas kita pindah ke layar HP, kabar singkat di sela kesibukan, dan hitung mundur jadwal bertemu. Jauh di peta, tapi tetap jadi rumah yang paling nyaman untuk pulang."
+        }
+      ],
+
+      // 5. Kalimat LDR ("Distance But Still Us")
+      ldrQuotes: {
+        englishMain: "Different places, same person to come home to.",
+        indonesianSub1: "Jaraknya memang jauh, tapi cerita kita tetap berjalan.",
+        indonesianSub2: "Jarak dan rasa kecewa belakangan ini memang bikin suasana kita beda. Tapi dari semua itu, aku tetap mau milih kamu. Maaf kalau aku ada salah, dan terima kasih Udah bertahan hampir setahun ini sama aku. Semoga kita bisa lebih baik lagi kedepannya."
+      },
+
+      // 6. Daftar Pesan Acak ("Random Love Notes")
+      loveNotes: [
+        "kurangi ngudud dan ngepod nya, biar terbiasa buat kedepannya, love your self yaa bub, karna kalo aku udahh sayang sm km gausa tanya",
+        "kalo lagi kangen,berantem buka website ini aja ya. kalo ga juga, berarti harus ketemu.",
+        "Reminder: komitmen kita tetep jujur dan bilang apapun kalo ada apa apa biar hub kita ttp baik yaa love uu so muchh.",
+        "Hubungan kita akhir akhir ini udah jauh yaa?, ayo perbaiki dan kaya dulu lagi, yg sama sama excited cerita apapun dan ga silent treatment, aku kgn tau kita yg kaya gitu, setelah hari hari blkngan ini aku balik ke kmu krna setiap aku liat galeri isinya km doang, ngeliat kita se seru itu klo lgi baik baik aja, pls kalo aku cape tolong bantu aku ya? ajarin aku biar ga jadi org yg ke kanak kananan lagi, i know aku salah juga sama km smnjak kita ldr gini,aku minta maaf bangtt krna udh buat hubungan kita kaya gini:( ) ",
+        "Tetep jadi cwo aku ya? semua kata katamu yg km blg bakal aku inget terus, so klo km ngelanggar berarti km bohongin diri km sendiri yaa jangan smpee dah",
+        "Kalau harimu lagi berat, selalu cerita sama aku ya? lupain dan jangan anggep aku pernah bikin km kecewa juga ya, yg pnting apapun itu aku selalu siapp buat cowo kuu",
+        "Kapan kita nambah koleksi photobox lagi? kapan kita main lagi? km ga kgn meluk aku bubb? km ga kgn jailin aku ganggu aku? km ga kgn bikin aku kesel? km ga kgn jmput aku buat main? km ga kgn deep talk sama ku? km ga kgn kis aku? mana km yg sering blg kgn ke aku? sayang km udah abis kah karna udh 4 bulan ga ketemu aku? smgtku tiap hari cuma mama papa sm kmu tau, aku mikir oiya bntr lgi aku bakalan ktmu sm kaliann, bakalan mainn bareng, cm itu penyemangat ku bubb",
+        "thank u bubb buat smunya, suka duka jalanin hubungan ini yg hampir satu tahun, aku selalu doain km yg terbaik kok, sellu dikelilingi hal hal yg baik, jaga kesehtan yaa buatt ketemu akuu, maaf buat smuanya yg udh terjadi akhir akhir ini, klo ga ada mslh trus drimana kita bakalan beljar saling memehami? aku tau ga smuanya salah km, kita sama sama salah, kita saling nyakitin, utamain ego masing masing, pdhl kalo kita baik baik aja se seneng itu lohh,aku kecewa tapi km juga kecewa, so aku berharap km kaya dulu lagi ya? mana aji yg dulu? yg cerita apapun sama ku, mana ketengilnya itu skrg? aku kgnn, pls berubah ya, ayo sama sama berubah, saling jujur ngabarin jauhin yg namnnya silent treatment, jauhi dry text klo lgi marah, bukan lgi marah aja si, kapanpn ga bole dry text,krna ga enak tau dibaca ga ada excitednya sama skalii",
+        "ingett terakhir kita ketemu di bandara? km bilang apa? klo ga inget sini aku kasi tau, km bilang bakalan nungguin aku kapanpun , km bakalan berusaha walalupun kita ldr, km sanggup jauh sm ku buat pendidikan ku, n ya aku juga blg sm km, satu yg aku mau, aku mau km ttp jujur sm ku, ngabarin aku, tepatin ya ??."
+      ],
+
+      // 7. now, my fav foto
+      favoriteMoments: [
+        
+        {
+          src: "WhatsApp Image 2026-11-09 at 1.50.19 PM.jpeg",
+          badge: "Bonus Gemas",
+          title: "Atlet Mewarnai Se-Kota Padang 2013",
+          description:
+            "Foto wajib disimpan di halaman utama hp kuu sebagai pengingat klo orang yang sekarang lagi berjuang ldran,dulu pernah tampil totalitas pakai peci pink AHAHHAAHA GEMESS."
+        }
+      ],
+
+      // 8. Pesan Kejutan Penutup ("One Last Thing...")
+      surpriseTitle: "4u, di Mana Pun Kamu Berada Hari Ini",
+      surpriseMessage:
+        "Lately ive been feeling the distance between us-not just in miles, but in the way e talk n look  at each other. Somewhere along the way,all the misunderstandings and the pride we both held onto started replacing the excitement we used to have. I miss the version of us where everything felt effortless, light, and full of laughter. I know I havent always made things easy, and if my past mistakes left you disappointed or tired, im genuinely sorry. Looking back at how close we are to reaching a year together, I realize I dont want us to slowly drift apart just because were both too stubborn to soften our hearts.We dont have to go back to the exact same past, because weve grown. I just hope we can put our egos aside, forgive the things that hurt, and start choosing each other again with the same warmth we had from the very beginning."
+    };
+  </script>
+
+  <!-- =====================================================================
+       DEKORASI PARTIKEL HALUS & TOMBOL MUSIK MENGAMBANG
+  ====================================================================== -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+    <svg class="floating-ornament absolute top-20 left-[8%] w-5 h-5 text-dustypink/40" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" />
+    </svg>
+    <svg class="floating-ornament absolute top-1/3 right-[10%] w-4 h-4 text-softbrown/25" style="animation-delay: 2s;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+    </svg>
+    <svg class="floating-ornament absolute bottom-32 left-[14%] w-4 h-4 text-dustypink/35" style="animation-delay: 3.5s;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L14.2 9.8L22 12L14.2 14.2L12 22L9.8 14.2L2 12L9.8 9.8L12 2Z" />
+    </svg>
+  </div>
+
+  <!-- Navigasi Minimalis Atas -->
+  <header class="sticky top-0 z-40 bg-cream/85 backdrop-blur-md border-b border-softbrown/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#home" class="font-serif italic text-lg sm:text-xl text-deepbrown tracking-tight flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-dustypink inline-block"></span>
+        <span id="navCoupleName">Kita Berdua</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-7 text-sm text-softbrown font-medium">
+        <a href="#memories" class="hover:text-deepbrown transition-colors">Memories</a>
+        <a href="#story" class="hover:text-deepbrown transition-colors">Our Story</a>
+        <a href="#distance" class="hover:text-deepbrown transition-colors">LDR</a>
+        <a href="#notes" class="hover:text-deepbrown transition-colors">Love Notes</a>
+        <a href="#favorites" class="hover:text-deepbrown transition-colors">Favorites</a>
+        <a href="#countdown" class="hover:text-deepbrown transition-colors">Countdown</a>
+      </nav>
+
+      <!-- Kontrol Musik & Edit Nama Cepat -->
+      <div class="flex items-center gap-2">
+        <button
+          id="editNamesBtn"
+          title="Ubah Nama Pasangan"
+          class="text-xs px-3 py-2 rounded-full border border-softbrown/20 text-softbrown hover:bg-sand/60 hover:text-deepbrown transition-all flex items-center gap-1.5"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+          </svg>
+          <span class="hidden sm:inline">Edit Nama</span>
+        </button>
+
+        <button
+          id="musicToggleBtn"
+          aria-label="Toggle Background Music"
+          class="text-xs px-3.5 py-2 rounded-full bg-warmwhite border border-softbrown/20 text-deepbrown shadow-sm hover:border-dustypink transition-all flex items-center gap-2"
+        >
+          <span id="musicIndicator" class="w-2 h-2 rounded-full bg-softbrown/40"></span>
+          <span id="musicBtnText">Music: OFF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+    <!-- =====================================================================
+         1. HALAMAN PEMBUKA (HOMEPAGE)
+    ====================================================================== -->
+    <section id="home" class="min-h-[88vh] flex items-center justify-center px-4 sm:px-6 py-16 sm:py-24">
+      <div class="max-w-3xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-warmwhite/90 border border-softbrown/15 text-xs uppercase tracking-[0.2em] text-softbrown mb-6 animate-fade-up">
+          <span class="text-dustypink">✦</span>
+          <span id="heroTagline">Personal Digital Keepsake</span>
+          <span class="text-dustypink">✦</span>
+        </div>
+
+        <h1 id="heroHeadline" class="font-serif text-4xl sm:text-6xl md:text-[64px] text-deepbrown leading-[1.14] font-medium mb-6 animate-fade-up delay-100">
+          A little place for our little memories.
+        </h1>
+
+        <div class="mb-6 animate-fade-up delay-200">
+          <p class="font-serif italic text-xl sm:text-2xl text-softbrown">
+            For <span id="heroCoupleNames" class="text-deepbrown underline decoration-dustypink/70 decoration-2 underline-offset-4">Kita Berdua</span>
+          </p>
+        </div>
+
+        <p id="heroSubtitle" class="text-softbrown text-base sm:text-lg max-w-xl mx-auto leading-relaxed mb-10 animate-fade-up delay-200">
+          Ruang kecil yang kubuat khusus untuk menyimpan potongan cerita, tawa konyol, dan hal-hal sederhana yang bikin jarak terasa tetap dekat.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up delay-300">
+          <button
+            id="openWorldBtn"
+            class="w-full sm:w-auto px-8 py-4 rounded-full bg-deepbrown text-cream font-medium text-sm tracking-wide shadow-lg shadow-deepbrown/15 hover:bg-softbrown transition-all duration-300 flex items-center justify-center gap-2.5 group"
+          >
+            <span>Open Our Little World</span>
+            <svg class="w-4 h-4 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mini Preview 3 Polaroid Miring di Bawah Hero -->
+        <div class="mt-16 sm:mt-20 grid grid-cols-3 gap-3 sm:gap-6 max-w-xl mx-auto animate-fade-up delay-300">
+          <div class="bg-warmwhite p-2 sm:p-2.5 rounded-xl shadow-md border border-softbrown/10 -rotate-3 hover:rotate-0 transition-transform duration-500">
+            <img src="foto-2.jpg.png" alt="Boncengan Motor" class="w-full aspect-[4/5] object-cover rounded-lg bg-sand" onerror="this.src='https://placehold.co/400x500/F1EAE0/8C6D5E?text=Foto+Kita+1'" />
+          </div>
+          <div class="bg-warmwhite p-2 sm:p-2.5 rounded-xl shadow-md border border-softbrown/10 translate-y-2 hover:translate-y-0 transition-transform duration-500">
+            <img src="WhatsApp Image 2026-11-09 at 5.12.30 PM (1).jpeg" alt="Koleksi Photobox" class="w-full aspect-[4/5] object-cover rounded-lg bg-sand" onerror="this.src='https://placehold.co/400x500/F1EAE0/8C6D5E?text=Photobox+Kita'" />
+          </div>
+          <div class="bg-warmwhite p-2 sm:p-2.5 rounded-xl shadow-md border border-softbrown/10 rotate-3 hover:rotate-0 transition-transform duration-500">
+            <img src="foto4.jpg.jpeg" alt="Jalan-jalan" class="w-full aspect-[4/5] object-cover rounded-lg bg-sand" onerror="this.src='https://placehold.co/400x500/F1EAE0/8C6D5E?text=Jalan+Jalan'" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         2. OUR MEMORIES (GALERI FOTO SCRAPBOOK DIGITAL)
+    ====================================================================== -->
+    <section id="memories" class="py-20 sm:py-28 px-4 sm:px-6 max-w-6xl mx-auto reveal">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <span class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold">01 / Digital Scrapbook</span>
+          <h2 class="font-serif text-3xl sm:text-5xl text-deepbrown mt-2">Our Memories</h2>
+          <p class="text-softbrown text-sm sm:text-base mt-2 max-w-lg">
+            Klik foto mana saja untuk melihat ukuran penuh dan membaca cerita di baliknya.
+          </p>
+        </div>
+
+        <!-- Tombol Filter Kategori & Tambah Foto Baru -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button data-filter="all" class="filter-btn active px-4 py-2 rounded-full text-xs font-medium bg-deepbrown text-cream transition-all">
+            Semua
+          </button>
+          <button data-filter="jalan-jalan" class="filter-btn px-4 py-2 rounded-full text-xs font-medium bg-warmwhite text-softbrown border border-softbrown/15 hover:border-softbrown/40 transition-all">
+            Jalan-Jalan
+          </button>
+          <button data-filter="sekolah" class="filter-btn px-4 py-2 rounded-full text-xs font-medium bg-warmwhite text-softbrown border border-softbrown/15 hover:border-softbrown/40 transition-all">
+            Masa Sekolah
+          </button>
+          <button data-filter="photobox" class="filter-btn px-4 py-2 rounded-full text-xs font-medium bg-warmwhite text-softbrown border border-softbrown/15 hover:border-softbrown/40 transition-all">
+            Photobox
+          </button>
+          <button data-filter="candid" class="filter-btn px-4 py-2 rounded-full text-xs font-medium bg-warmwhite text-softbrown border border-softbrown/15 hover:border-softbrown/40 transition-all">
+            Candid & Lucu
+          </button>
+
+          <button
+            id="openUploadModalBtn"
+            class="px-4 py-2 rounded-full text-xs font-medium bg-dustypinklight text-deepbrown border border-dustypink/40 hover:bg-dustypink/30 transition-all flex items-center gap-1.5 ml-0 sm:ml-2"
+          >
+            <span>+ Tambah Foto</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid Masonry / Scrapbook Bervariasi -->
+      <div id="memoriesGrid" class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+        <!-- Kartu foto dirender otomatis oleh JavaScript dari SITE_CONFIG -->
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         3. OUR LITTLE STORY (TIMELINE INTERAKTIF)
+    ====================================================================== -->
+    <section id="story" class="py-20 sm:py-28 px-4 sm:px-6 bg-warmwhite/70 border-y border-softbrown/10 reveal">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16">
+          <span class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold">02 / Chapters</span>
+          <h2 class="font-serif text-3xl sm:text-5xl text-deepbrown mt-2">Our Little Story</h2>
+          <p class="text-softbrown text-sm sm:text-base mt-3 max-w-md mx-auto">
+            Perjalanan kecil dari satu ruang kelas sampai sekarang saling menjaga dari kejauhan.
+          </p>
+        </div>
+
+        <!-- Timeline Container -->
+        <div id="timelineContainer" class="relative space-y-10 before:content-[''] before:absolute before:left-4 sm:before:left-1/2 before:top-2 before:bottom-2 before:w-px before:bg-softbrown/25">
+          <!-- Item timeline dirender oleh JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         4. DISTANCE BUT STILL US (BAGIAN KHUSUS LDR)
+    ====================================================================== -->
+    <section id="distance" class="py-24 sm:py-32 px-4 sm:px-6 max-w-4xl mx-auto text-center reveal">
+      <span class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold">03 / Miles Apart</span>
+
+      <h2 id="ldrQuoteMain" class="font-serif italic text-3xl sm:text-5xl md:text-[52px] text-deepbrown leading-tight mt-4 mb-8">
+        “Different places, same person to come home to.”
+      </h2>
+
+      <!-- Indikator Koneksi Dua Kota Minimalis -->
+      <div class="max-w-md mx-auto my-10 p-5 rounded-2xl bg-warmwhite border border-softbrown/15 shadow-sm">
+        <div class="flex items-center justify-between text-xs sm:text-sm font-medium text-deepbrown">
+          <div class="text-left">
+            <span class="block text-[11px] uppercase tracking-wider text-softbrown">Titik A</span>
+            <span id="cityA" class="font-serif text-base sm:text-lg">Kota Kamu</span>
+          </div>
+
+          <div class="flex-1 mx-4 flex items-center justify-center relative">
+            <div class="w-full border-t border-dashed border-softbrown/40"></div>
+            <span class="absolute bg-warmwhite px-2 text-dustypink text-sm">✈</span>
+          </div>
+
+          <div class="text-right">
+            <span class="block text-[11px] uppercase tracking-wider text-softbrown">Titik B</span>
+            <span id="cityB" class="font-serif text-base sm:text-lg">Kota Aku</span>
+          </div>
+        </div>
+        <p id="distanceNoteText" class="text-xs text-softbrown mt-3 pt-3 border-t border-softbrown/10">
+          Beda kota, beda kesibukan, tapi tujuannya tetap sama.
+        </p>
+      </div>
+
+      <div class="space-y-3 text-softbrown text-base sm:text-lg font-normal max-w-xl mx-auto leading-relaxed">
+        <p id="ldrQuoteSub1">Jaraknya memang jauh, tapi cerita kita tetap berjalan.</p>
+        <p id="ldrQuoteSub2" class="text-deepbrown font-medium">Semoga setiap pertemuan selalu punya cerita baru.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         5. RANDOM LOVE NOTES (PESAN ACAK MANIS & JAHIL)
+    ====================================================================== -->
+    <section id="notes" class="py-20 sm:py-24 px-4 sm:px-6 max-w-3xl mx-auto reveal">
+      <div class="bg-warmwhite rounded-3xl p-8 sm:p-12 border border-softbrown/15 shadow-xl shadow-deepbrown/5 text-center relative overflow-hidden">
+        <!-- Ornamen sudut -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-dustypinklight/60 pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-sand/70 pointer-events-none"></div>
+
+        <span class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold relative z-10">
+          04 / Pocket Reminders
+        </span>
+        <h2 class="font-serif text-3xl sm:text-4xl text-deepbrown mt-2 mb-3 relative z-10">
+          Random Love Notes
+        </h2>
+        <p class="text-softbrown text-sm mb-8 relative z-10">
+          Buka satu catatan kecil setiap kali kamu lagi kangen, capek, atau butuh diingatkan sesuatu.
+        </p>
+
+        <!-- Kotak Tampilan Pesan -->
+        <div class="min-h-[140px] flex items-center justify-center px-4 sm:px-8 py-6 rounded-2xl bg-cream/90 border border-softbrown/15 mb-8 relative z-10">
+          <p id="randomNoteText" class="note-transition font-serif italic text-xl sm:text-2xl text-deepbrown leading-relaxed">
+            “Kalau lagi kangen, buka website ini. Kalau masih kangen juga, berarti harus ketemu.”
+          </p>
+        </div>
+
+        <button
+          id="newNoteBtn"
+          class="relative z-10 px-7 py-3.5 rounded-full bg-deepbrown text-cream text-sm font-medium hover:bg-softbrown active:scale-[0.98] transition-all inline-flex items-center gap-2 shadow-md shadow-deepbrown/10"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Ambil Pesan Lainnya</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         6. OUR FAVORITE MOMENTS (HIGHLIGHT SPESIAL)
+    ====================================================================== -->
+    <section id="favorites" class="py-20 sm:py-28 px-4 sm:px-6 max-w-6xl mx-auto reveal">
+      <div class="text-center mb-14">
+        <span class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold">05 / Highlights</span>
+        <h2 class="font-serif text-3xl sm:text-5xl text-deepbrown mt-2">Our Favorite Moments</h2>
+        <p class="text-softbrown text-sm sm:text-base mt-2 max-w-md mx-auto">
+          Beberapa potongan momen yang paling sering bikin senyum-senyum sendiri kalau diingat.
+        </p>
+      </div>
+
+      <div id="favoritesGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Kartu highlight dirender oleh JavaScript -->
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         7. COUNTDOWN TO MEET AGAIN
+    ====================================================================== -->
+    <section id="countdown" class="py-20 sm:py-28 px-4 sm:px-6 bg-warmwhite/80 border-y border-softbrown/10 reveal">
+      <div class="max-w-3xl mx-auto text-center">
+        <span class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold">06 / Counting The Days</span>
+        <h2 class="font-serif text-3xl sm:text-5xl text-deepbrown mt-2 mb-3">
+          Countdown To Meet Again
+        </h2>
+        <p id="countdownTargetText" class="text-softbrown text-sm sm:text-base mb-10">
+          Menuju pertemuan kita berikutnya
+        </p>
+
+        <!-- Kotak Angka Hitung Mundur -->
+        <div class="grid grid-cols-4 gap-3 sm:gap-5 max-w-xl mx-auto mb-8">
+          <div class="bg-cream rounded-2xl p-4 sm:p-6 border border-softbrown/15 shadow-sm">
+            <span id="cdDays" class="block font-serif text-3xl sm:text-5xl text-deepbrown font-semibold">00</span>
+            <span class="text-[11px] sm:text-xs uppercase tracking-widest text-softbrown mt-1 block">Hari</span>
+          </div>
+          <div class="bg-cream rounded-2xl p-4 sm:p-6 border border-softbrown/15 shadow-sm">
+            <span id="cdHours" class="block font-serif text-3xl sm:text-5xl text-deepbrown font-semibold">00</span>
+            <span class="text-[11px] sm:text-xs uppercase tracking-widest text-softbrown mt-1 block">Jam</span>
+          </div>
+          <div class="bg-cream rounded-2xl p-4 sm:p-6 border border-softbrown/15 shadow-sm">
+            <span id="cdMinutes" class="block font-serif text-3xl sm:text-5xl text-deepbrown font-semibold">00</span>
+            <span class="text-[11px] sm:text-xs uppercase tracking-widest text-softbrown mt-1 block">Menit</span>
+          </div>
+          <div class="bg-cream rounded-2xl p-4 sm:p-6 border border-softbrown/15 shadow-sm">
+            <span id="cdSeconds" class="block font-serif text-3xl sm:text-5xl text-dustypink font-semibold">00</span>
+            <span class="text-[11px] sm:text-xs uppercase tracking-widest text-softbrown mt-1 block">Detik</span>
+          </div>
+        </div>
+
+        <!-- Tombol Atur Tanggal Langsung di UI -->
+        <button
+          id="openDateModalBtn"
+          class="text-xs px-4 py-2 rounded-full border border-softbrown/25 text-softbrown hover:text-deepbrown hover:bg-cream transition-all inline-flex items-center gap-1.5"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          <span>Atur Tanggal Pertemuan</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         8. SURPRISE SECTION ("ONE LAST THING...")
+    ====================================================================== -->
+    <section id="surprise" class="py-24 sm:py-32 px-4 sm:px-6 max-w-2xl mx-auto text-center reveal">
+      <p class="text-xs uppercase tracking-[0.2em] text-softbrown font-semibold mb-4">
+        07 / Before You Close This Page
+      </p>
+
+      <button
+        id="surpriseBtn"
+        class="px-8 py-4 rounded-full bg-warmwhite border border-softbrown/30 text-deepbrown font-serif italic text-lg sm:text-xl shadow-md hover:shadow-lg hover:border-dustypink hover:-translate-y-0.5 transition-all duration-300"
+      >
+        One Last Thing...
+      </button>
+
+      <!-- Kotak Surat Kejutan (Tersembunyi Awalnya) -->
+      <div
+        id="surpriseLetterCard"
+        class="hidden mt-10 bg-warmwhite rounded-3xl p-8 sm:p-11 border border-dustypink/40 shadow-xl shadow-deepbrown/5 text-left transition-all duration-700"
+      >
+        <div class="flex items-center justify-between border-b border-softbrown/10 pb-4 mb-6">
+          <span class="text-xs uppercase tracking-[0.18em] text-softbrown">A Small Note For You</span>
+          <span class="text-dustypink text-sm">♥</span>
+        </div>
+
+        <h3 id="surpriseTitleText" class="font-serif text-2xl sm:text-3xl text-deepbrown mb-5">
+          Untuk Kamu, di Mana Pun Kamu Berada Hari Ini
+        </h3>
+
+        <div id="surpriseBodyText" class="space-y-4 text-softbrown text-sm sm:text-base leading-relaxed whitespace-pre-line">
+          <!-- Isi pesan diisi dari SITE_CONFIG -->
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-softbrown/10 flex items-center justify-between text-xs text-softbrown">
+          <span>Dengan tulus,</span>
+          <span id="surpriseSignature" class="font-serif italic text-base text-deepbrown">Selalu untukmu</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Minimalis -->
+  <footer class="py-10 px-4 text-center border-t border-softbrown/10 text-xs text-softbrown">
+    <p class="font-serif italic text-sm text-deepbrown mb-1">A little place for our little memories.</p>
+    <p>Made with warmth & sincerity — <span id="footerNames">Kita Berdua</span></p>
+  </footer>
+
+  <!-- =====================================================================
+       MODAL 1: LIGHTBOX FOTO (LIHAT UKURAN BESAR)
+  ====================================================================== -->
+  <div id="lightboxModal" class="fixed inset-0 z-50 hidden bg-deepbrown/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-warmwhite rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-softbrown/20 animate-fade-up">
+      <div class="relative bg-sand/50 flex items-center justify-center max-h-[65vh] overflow-hidden">
+        <img id="lightboxImg" src="" alt="Preview Kenangan" class="max-h-[65vh] w-auto object-contain" />
+        <button
+          id="closeLightboxBtn"
+          aria-label="Tutup"
+          class="absolute top-4 right-4 w-9 h-9 rounded-full bg-warmwhite/90 text-deepbrown flex items-center justify-center shadow hover:bg-warmwhite transition-all"
+        >
+          ✕
+        </button>
+      </div>
+      <div class="p-6 sm:p-7">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <h3 id="lightboxTitle" class="font-serif text-xl sm:text-2xl text-deepbrown">Judul Foto</h3>
+          <span id="lightboxDate" class="text-xs px-3 py-1 rounded-full bg-cream text-softbrown border border-softbrown/15">Tanggal</span>
+        </div>
+        <p id="lightboxCaption" class="text-softbrown text-sm sm:text-base leading-relaxed">
+          Caption foto...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 2: TAMBAH FOTO BARU KE SCRAPBOOK
+  ====================================================================== -->
+  <div id="uploadModal" class="fixed inset-0 z-50 hidden bg-deepbrown/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-warmwhite rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-softbrown/20">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-serif text-2xl text-deepbrown">Tambah Kenangan Baru</h3>
+        <button id="closeUploadModalBtn" class="text-softbrown hover:text-deepbrown">✕</button>
+      </div>
+
+      <form id="uploadForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-softbrown mb-1.5">Pilih Foto dari Perangkat</label>
+          <input
+            type="file"
+            id="newPhotoFile"
+            accept="image/*"
+            required
+            class="w-full text-xs text-softbrown file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-cream file:text-deepbrown hover:file:bg-sand cursor-pointer"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-softbrown mb-1.5">Judul Momen</label>
+          <input
+            type="text"
+            id="newPhotoTitle"
+            placeholder="Contoh: Kopi Sore Setelah Lama Nggak Ketemu"
+            required
+            class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-softbrown mb-1.5">Tanggal / Keterangan</label>
+            <input
+              type="text"
+              id="newPhotoDate"
+              placeholder="Contoh: November 2026"
+              required
+              class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-softbrown mb-1.5">Kategori</label>
+            <select
+              id="newPhotoCategory"
+              class="w-full px-3 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+            >
+              <option value="jalan-jalan">Jalan-Jalan</option>
+              <option value="sekolah">Masa Sekolah</option>
+              <option value="photobox">Photobox</option>
+              <option value="candid">Candid & Lucu</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-softbrown mb-1.5">Cerita Singkat</label>
+          <textarea
+            id="newPhotoCaption"
+            rows="3"
+            placeholder="Tulis cerita singkat atau hal lucu di balik foto ini..."
+            required
+            class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 rounded-full bg-deepbrown text-cream text-sm font-medium hover:bg-softbrown transition-all"
+        >
+          Simpan ke Scrapbook
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 3: ATUR TANGGAL PERTEMUAN & EDIT NAMA PASANGAN
+  ====================================================================== -->
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden bg-deepbrown/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-warmwhite rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-softbrown/20">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-serif text-2xl text-deepbrown">Sesuaikan Detail Kita</h3>
+        <button id="closeSettingsModalBtn" class="text-softbrown hover:text-deepbrown">✕</button>
+      </div>
+
+      <form id="settingsForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-softbrown mb-1.5">Nama Kalian Berdua</label>
+          <input
+            type="text"
+            id="inputCoupleNames"
+            placeholder="Contoh: Raka & Nadia"
+            class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-softbrown mb-1.5">Kota Kamu</label>
+            <input
+              type="text"
+              id="inputCityA"
+              class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-softbrown mb-1.5">Kota Pasangan</label>
+            <input
+              type="text"
+              id="inputCityB"
+              class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-softbrown mb-1.5">Tanggal & Jam Pertemuan Berikutnya</label>
+          <input
+            type="datetime-local"
+            id="inputNextMeet"
+            class="w-full px-4 py-2.5 rounded-xl bg-cream border border-softbrown/20 text-sm text-deepbrown focus:outline-none focus:border-dustypink"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 rounded-full bg-deepbrown text-cream text-sm font-medium hover:bg-softbrown transition-all"
+        >
+          Terapkan Perubahan
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notifikasi Lembut (Pengganti alert) -->
+  <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-deepbrown text-cream text-xs shadow-lg opacity-0 pointer-events-none transition-opacity duration-300">
+    Perubahan disimpan
+  </div>
+
+  <!-- =====================================================================
+       LOGIKA INTERAKTIF, RENDER KONTEN & AMBIENT PIANO MUSIC (WEB AUDIO API)
+  ====================================================================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // --- 1. Muat Pengaturan Tersimpan dari LocalStorage (jika ada) ---
+      const savedPrefs = JSON.parse(localStorage.getItem("ldr_site_prefs") || "{}");
+      const savedExtraPhotos = JSON.parse(localStorage.getItem("ldr_extra_photos") || "[]");
+
+      let currentCoupleNames = savedPrefs.coupleNames || SITE_CONFIG.coupleNames;
+      let currentCityA = savedPrefs.cityA || SITE_CONFIG.yourCity;
+      let currentCityB = savedPrefs.cityB || SITE_CONFIG.partnerCity;
+      let currentNextMeet = savedPrefs.nextMeetDate || SITE_CONFIG.nextMeetDate;
+      let allMemories = [...SITE_CONFIG.memories, ...savedExtraPhotos];
+
+      // --- Helper Toast Notifikasi ---
+      function showToast(msg) {
+        const toast = document.getElementById("toastBox");
+        toast.textContent = msg;
+        toast.classList.remove("opacity-0");
+        setTimeout(() => {
+          toast.classList.add("opacity-0");
+        }, 2600);
+      }
+
+      // --- 2. Terapkan Teks Utama dari SITE_CONFIG ---
+      function applyTextConfig() {
+        document.getElementById("navCoupleName").textContent = currentCoupleNames;
+        document.getElementById("heroCoupleNames").textContent = currentCoupleNames;
+        document.getElementById("footerNames").textContent = currentCoupleNames;
+        document.getElementById("heroHeadline").textContent = SITE_CONFIG.heroHeadline;
+        document.getElementById("heroSubtitle").textContent = SITE_CONFIG.heroSubtitle;
+
+        document.getElementById("cityA").textContent = currentCityA;
+        document.getElementById("cityB").textContent = currentCityB;
+        document.getElementById("distanceNoteText").textContent = SITE_CONFIG.distanceNote;
+
+        document.getElementById("ldrQuoteMain").textContent = `“${SITE_CONFIG.ldrQuotes.englishMain}”`;
+        document.getElementById("ldrQuoteSub1").textContent = SITE_CONFIG.ldrQuotes.indonesianSub1;
+        document.getElementById("ldrQuoteSub2").textContent = SITE_CONFIG.ldrQuotes.indonesianSub2;
+
+        document.getElementById("surpriseTitleText").textContent = SITE_CONFIG.surpriseTitle;
+        document.getElementById("surpriseBodyText").textContent = SITE_CONFIG.surpriseMessage;
+      }
+      applyTextConfig();
+
+      // --- 3. Render Galeri Scrapbook (Our Memories) ---
+      const memoriesGrid = document.getElementById("memoriesGrid");
+      let activeFilter = "all";
+
+      function renderMemories(filter = "all") {
+        memoriesGrid.innerHTML = "";
+        const filtered =
+          filter === "all"
+            ? allMemories
+            : allMemories.filter((item) => item.category === filter);
+
+        filtered.forEach((item, idx) => {
+          const card = document.createElement("article");
+          card.className =
+            "scrapbook-card break-inside-avoid rounded-2xl p-3.5 sm:p-4 relative cursor-pointer group";
+          card.style.transform = `rotate(${item.rotation || (idx % 2 === 0 ? "-1deg" : "1deg")})`;
+
+          card.innerHTML = `
+            <div class="washi-tape"></div>
+            <div class="overflow-hidden rounded-xl bg-sand mb-3.5 relative">
+              <img
+                src="${item.src}"
+                alt="${item.title}"
+                loading="lazy"
+                onerror="this.src='https://placehold.co/600x750/F1EAE0/8C6D5E?text=${encodeURIComponent(item.title)}'"
+                class="w-full h-auto object-cover transform group-hover:scale-[1.03] transition-transform duration-700"
+              />
+              <div class="absolute inset-0 bg-deepbrown/0 group-hover:bg-deepbrown/10 transition-colors duration-300"></div>
+            </div>
+            <div class="px-1">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-[11px] uppercase tracking-wider text-softbrown font-medium">${item.date}</span>
+                <span class="text-[11px] text-dustypink">✦</span>
+              </div>
+              <h3 class="font-serif text-lg sm:text-xl text-deepbrown mb-1.5 group-hover:text-softbrown transition-colors">
+                ${item.title}
+              </h3>
+              <p class="text-xs sm:text-sm text-softbrown leading-relaxed line-clamp-3">
+                ${item.caption}
+              </p>
+            </div>
+          `;
+
+          card.addEventListener("click", () => openLightbox(item));
+          memoriesGrid.appendChild(card);
+        });
+      }
+      renderMemories();
+
+      // Filter Kategori Galeri
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".filter-btn").forEach((b) => {
+            b.classList.remove("bg-deepbrown", "text-cream");
+            b.classList.add("bg-warmwhite", "text-softbrown");
+          });
+          btn.classList.remove("bg-warmwhite", "text-softbrown");
+          btn.classList.add("bg-deepbrown", "text-cream");
+          activeFilter = btn.dataset.filter;
+          renderMemories(activeFilter);
+        });
+      });
+
+      // --- 4. Lightbox Modal ---
+      const lightboxModal = document.getElementById("lightboxModal");
+      function openLightbox(item) {
+        document.getElementById("lightboxImg").src = item.src;
+        document.getElementById("lightboxTitle").textContent = item.title;
+        document.getElementById("lightboxDate").textContent = item.date;
+        document.getElementById("lightboxCaption").textContent = item.caption;
+        lightboxModal.classList.remove("hidden");
+      }
+
+      document.getElementById("closeLightboxBtn").addEventListener("click", () => {
+        lightboxModal.classList.add("hidden");
+      });
+      lightboxModal.addEventListener("click", (e) => {
+        if (e.target === lightboxModal) lightboxModal.classList.add("hidden");
+      });
+
+      // --- 5. Upload Foto Baru ke Scrapbook ---
+      const uploadModal = document.getElementById("uploadModal");
+      document.getElementById("openUploadModalBtn").addEventListener("click", () => {
+        uploadModal.classList.remove("hidden");
+      });
+      document.getElementById("closeUploadModalBtn").addEventListener("click", () => {
+        uploadModal.classList.add("hidden");
+      });
+
+      document.getElementById("uploadForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fileInput = document.getElementById("newPhotoFile");
+        const title = document.getElementById("newPhotoTitle").value.trim();
+        const date = document.getElementById("newPhotoDate").value.trim();
+        const category = document.getElementById("newPhotoCategory").value;
+        const caption = document.getElementById("newPhotoCaption").value.trim();
+
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const newMemory = {
+            id: "custom-" + Date.now(),
+            src: event.target.result,
+            title,
+            date,
+            category,
+            rotation: Math.random() > 0.5 ? "1.3deg" : "-1.3deg",
+            caption,
+          };
+
+          allMemories.unshift(newMemory);
+          try {
+            const updatedSaved = [newMemory, ...savedExtraPhotos];
+            localStorage.setItem("ldr_extra_photos", JSON.stringify(updatedSaved));
+          } catch (err) {
+            // Jika ukuran file melebihi batas localStorage, tetap tampil di sesi aktif
+          }
+
+          renderMemories(activeFilter);
+          uploadModal.classList.add("hidden");
+          e.target.reset();
+          showToast("Foto baru ditambahkan ke scrapbook!");
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // --- 6. Render Timeline Perjalanan (Our Little Story) ---
+      const timelineContainer = document.getElementById("timelineContainer");
+      SITE_CONFIG.storyTimeline.forEach((step, index) => {
+        const isEven = index % 2 === 0;
+        const row = document.createElement("div");
+        row.className = `relative flex flex-col sm:flex-row items-start sm:items-center justify-between ${
+          isEven ? "sm:flex-row-reverse" : ""
+        }`;
+
+        row.innerHTML = `
+          <div class="hidden sm:block sm:w-5/12"></div>
+          <div class="absolute left-4 sm:left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-dustypink ring-4 ring-cream z-10 mt-1.5 sm:mt-0"></div>
+          <div class="pl-11 sm:pl-0 sm:w-5/12">
+            <div class="bg-cream p-6 rounded-2xl border border-softbrown/15 shadow-sm hover:border-dustypink/60 transition-colors">
+              <div class="flex items-center justify-between text-xs text-softbrown mb-1.5">
+                <span class="font-semibold uppercase tracking-wider text-dustypink">${step.phase}</span>
+                <span>${step.date}</span>
+              </div>
+              <h3 class="font-serif text-xl text-deepbrown mb-2">${step.title}</h3>
+              <p class="text-sm text-softbrown leading-relaxed">${step.description}</p>
+            </div>
+          </div>
+        `;
+        timelineContainer.appendChild(row);
+      });
+
+      // --- 7. Random Love Notes ---
+      const randomNoteText = document.getElementById("randomNoteText");
+      let lastNoteIndex = -1;
+
+      document.getElementById("newNoteBtn").addEventListener("click", () => {
+        const notes = SITE_CONFIG.loveNotes;
+        let nextIndex;
+        do {
+          nextIndex = Math.floor(Math.random() * notes.length);
+        } while (nextIndex === lastNoteIndex && notes.length > 1);
+
+        lastNoteIndex = nextIndex;
+        randomNoteText.style.opacity = "0";
+        randomNoteText.style.transform = "translateY(6px)";
+
+        setTimeout(() => {
+          randomNoteText.textContent = `“${notes[nextIndex]}”`;
+          randomNoteText.style.opacity = "1";
+          randomNoteText.style.transform = "translateY(0)";
+        }, 240);
+      });
+
+      // --- 8. Render Our Favorite Moments ---
+      const favoritesGrid = document.getElementById("favoritesGrid");
+      SITE_CONFIG.favoriteMoments.forEach((fav) => {
+        const card = document.createElement("div");
+        card.className =
+          "bg-warmwhite rounded-3xl overflow-hidden border border-softbrown/15 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col";
+        card.innerHTML = `
+          <div class="aspect-[4/4] bg-sand overflow-hidden relative">
+            <img
+              src="${fav.src}"
+              alt="${fav.title}"
+              onerror="this.src='https://placehold.co/500x500/F1EAE0/8C6D5E?text=${encodeURIComponent(fav.title)}'"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+            />
+            <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-warmwhite/90 backdrop-blur-sm text-[11px] font-medium text-deepbrown shadow-sm">
+              ${fav.badge}
+            </span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-serif text-xl text-deepbrown mb-2">${fav.title}</h3>
+              <p class="text-sm text-softbrown leading-relaxed">${fav.description}</p>
+            </div>
+          </div>
+        `;
+        favoritesGrid.appendChild(card);
+      });
+
+      // --- 9. Countdown To Meet Again ---
+      function updateCountdown() {
+        const target = new Date(currentNextMeet).getTime();
+        const now = Date.now();
+        const diff = target - now;
+
+        const targetDateObj = new Date(currentNextMeet);
+        if (!isNaN(targetDateObj.getTime())) {
+          const formatted = targetDateObj.toLocaleDateString("id-ID", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+          document.getElementById("countdownTargetText").textContent =
+            `${SITE_CONFIG.nextMeetLabel} • ${formatted}`;
+        }
+
+        if (diff <= 0 || isNaN(diff)) {
+          document.getElementById("cdDays").textContent = "00";
+          document.getElementById("cdHours").textContent = "00";
+          document.getElementById("cdMinutes").textContent = "00";
+          document.getElementById("cdSeconds").textContent = "00";
+          document.getElementById("countdownTargetText").textContent =
+            "Hari pertemuan sudah tiba! Selamat melepas rindu.";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        document.getElementById("cdDays").textContent = String(days).padStart(2, "0");
+        document.getElementById("cdHours").textContent = String(hours).padStart(2, "0");
+        document.getElementById("cdMinutes").textContent = String(minutes).padStart(2, "0");
+        document.getElementById("cdSeconds").textContent = String(seconds).padStart(2, "0");
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // --- 10. Modal Pengaturan Nama & Tanggal ---
+      const settingsModal = document.getElementById("settingsModal");
+      function openSettingsModal() {
+        document.getElementById("inputCoupleNames").value = currentCoupleNames;
+        document.getElementById("inputCityA").value = currentCityA;
+        document.getElementById("inputCityB").value = currentCityB;
+        document.getElementById("inputNextMeet").value = currentNextMeet.slice(0, 16);
+        settingsModal.classList.remove("hidden");
+      }
+
+      document.getElementById("editNamesBtn").addEventListener("click", openSettingsModal);
+      document.getElementById("openDateModalBtn").addEventListener("click", openSettingsModal);
+      document.getElementById("closeSettingsModalBtn").addEventListener("click", () => {
+        settingsModal.classList.add("hidden");
+      });
+
+      document.getElementById("settingsForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const newNames = document.getElementById("inputCoupleNames").value.trim();
+        const newCityA = document.getElementById("inputCityA").value.trim();
+        const newCityB = document.getElementById("inputCityB").value.trim();
+        const newDate = document.getElementById("inputNextMeet").value;
+
+        if (newNames) currentCoupleNames = newNames;
+        if (newCityA) currentCityA = newCityA;
+        if (newCityB) currentCityB = newCityB;
+        if (newDate) currentNextMeet = newDate;
+
+        localStorage.setItem(
+          "ldr_site_prefs",
+          JSON.stringify({
+            coupleNames: currentCoupleNames,
+            cityA: currentCityA,
+            cityB: currentCityB,
+            nextMeetDate: currentNextMeet,
+          })
+        );
+
+        applyTextConfig();
+        updateCountdown();
+        settingsModal.classList.add("hidden");
+        showToast("Pengaturan berhasil diperbarui!");
+      });
+
+      // --- 11. Surprise Section ("One Last Thing...") ---
+      const surpriseBtn = document.getElementById("surpriseBtn");
+      const surpriseCard = document.getElementById("surpriseLetterCard");
+      surpriseBtn.addEventListener("click", () => {
+        if (surpriseCard.classList.contains("hidden")) {
+          surpriseCard.classList.remove("hidden");
+          surpriseCard.classList.add("animate-fade-up");
+          surpriseBtn.textContent = "Tutup Surat Kecil";
+          surpriseCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          surpriseCard.classList.add("hidden");
+          surpriseBtn.textContent = "One Last Thing...";
+        }
+      });
+
+      // --- 12. Ambient Soft Piano Music Generator (Tanpa File Eksternal) ---
+      let audioCtx = null;
+      let isPlaying = false;
+      let melodyTimer = null;
+
+      // Urutan nada lembut bertempo lambat (Fmaj7 - Cmaj7 - Dm7 - Bbmaj7)
+      const notesFreq = [
+        349.23, 440.0, 523.25, 659.25, // Fmaj7
+        261.63, 329.63, 392.0, 493.88, // Cmaj7
+        293.66, 349.23, 440.0, 523.25, // Dm7
+        233.08, 293.66, 349.23, 440.0  // Bbmaj7
+      ];
+      let noteStep = 0;
+
+      function playSoftNote(freq) {
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.035, now + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 2.5);
+      }
+
+      function startMusic() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+        if (isPlaying) return;
+
+        isPlaying = true;
+        document.getElementById("musicBtnText").textContent = "Music: ON";
+        document.getElementById("musicIndicator").classList.remove("bg-softbrown/40");
+        document.getElementById("musicIndicator").classList.add("bg-dustypink", "animate-pulse");
+
+        playSoftNote(notesFreq[noteStep % notesFreq.length]);
+        noteStep++;
+        melodyTimer = setInterval(() => {
+          playSoftNote(notesFreq[noteStep % notesFreq.length]);
+          noteStep++;
+        }, 1450);
+      }
+
+      function stopMusic() {
+        isPlaying = false;
+        clearInterval(melodyTimer);
+        document.getElementById("musicBtnText").textContent = "Music: OFF";
+        document.getElementById("musicIndicator").classList.add("bg-softbrown/40");
+        document.getElementById("musicIndicator").classList.remove("bg-dustypink", "animate-pulse");
+      }
+
+      document.getElementById("musicToggleBtn").addEventListener("click", () => {
+        if (isPlaying) {
+          stopMusic();
+        } else {
+          startMusic();
+        }
+      });
+
+      // Tombol Utama Hero: Scroll halus ke Galeri & nyalakan musik lembut
+      document.getElementById("openWorldBtn").addEventListener("click", () => {
+        document.getElementById("memories").scrollIntoView({ behavior: "smooth" });
+        if (!isPlaying) {
+          startMusic();
+        }
+      });
+
+      // --- 13. Animasi Reveal saat Scroll ---
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    });
+  </script>
+</body>
+</html>
